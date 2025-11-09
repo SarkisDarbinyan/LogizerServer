@@ -28,6 +28,19 @@ namespace LogizerServer.Controllers
             return Ok(level);
         }
 
+
+        [HttpGet]
+        public async Task<ActionResult<GetLevelDto>> GetLevelList()
+        {
+            var levels = await _context.Levels.ToListAsync();
+
+            if (levels.Count == 0)
+                return NotFound();
+
+            return Ok(levels);
+        }
+
+
         [HttpPost]
         public async Task<ActionResult<CreateLevelDto>> CreateLevel(CreateLevelDto createLevelDto)
         {
