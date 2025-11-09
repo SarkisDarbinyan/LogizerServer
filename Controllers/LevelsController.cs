@@ -18,14 +18,14 @@ namespace LogizerServer.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<CreateLevelDto>> GetLevel(int id)
+        public async Task<ActionResult<GetLevelDto>> GetLevel(int id)
         {
             var level = await _context.Levels.FindAsync(id);
 
             if (level == null)
                 return NotFound();
 
-            return Ok(LevelToDto(level));
+            return Ok(level);
         }
 
         [HttpPost]
@@ -50,14 +50,6 @@ namespace LogizerServer.Controllers
             await _context.SaveChangesAsync();
             
             return Ok(level);
-            //return CreatedAtAction(nameof(GetLevel), new { id = level.Id }, LevelToDto(level));
         }
-
-        private static CreateLevelDto LevelToDto(Level level) => new CreateLevelDto
-        {
-            Name = level.Name,
-            Description = level.Description,
-            LevelData = level.LevelData
-        };
     }
 }
