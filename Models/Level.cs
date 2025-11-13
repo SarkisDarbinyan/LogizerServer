@@ -1,4 +1,5 @@
-﻿namespace LogizerServer.Models
+﻿// Level.cs
+namespace LogizerServer.Models
 {
     public class Level
     {
@@ -7,13 +8,14 @@
         public string Description { get; set; } = string.Empty;
         public string LevelData { get; set; } = string.Empty;
 
-        // То что не настраивает игрок
-
         public Difficulties Difficulty { get; set; } = Difficulties.Unknown;
         public int LikeCount { get; set; } = 0;
         public int PlayCount { get; set; } = 0;
+
+        // Навигационные свойства
+        public ICollection<LevelRating> Ratings { get; set; } = new List<LevelRating>();
+        public ICollection<LevelLike> Likes { get; set; } = new List<LevelLike>();
     }
 
     public enum Difficulties { Unknown, Easy, Normal, Hard, Insane }
 }
-

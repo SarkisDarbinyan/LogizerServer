@@ -3,6 +3,7 @@ using System;
 using LogizerServer.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace LogizerServer.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251113094126_AddUsersAndFavorites")]
+    partial class AddUsersAndFavorites
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.10");
@@ -52,59 +55,6 @@ namespace LogizerServer.Migrations
                         .IsUnique();
 
                     b.ToTable("Levels");
-                });
-
-            modelBuilder.Entity("LogizerServer.Models.LevelLike", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("LevelId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("LikedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LevelId");
-
-                    b.HasIndex("UserId", "LevelId")
-                        .IsUnique();
-
-                    b.ToTable("LevelLikes");
-                });
-
-            modelBuilder.Entity("LogizerServer.Models.LevelRating", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("DifficultyRating")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int>("LevelId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("RatedAt")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("INTEGER");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LevelId");
-
-                    b.HasIndex("UserId", "LevelId")
-                        .IsUnique();
-
-                    b.ToTable("LevelRatings");
                 });
 
             modelBuilder.Entity("LogizerServer.Models.User", b =>
@@ -166,44 +116,6 @@ namespace LogizerServer.Migrations
                     b.ToTable("UserFavorites");
                 });
 
-            modelBuilder.Entity("LogizerServer.Models.LevelLike", b =>
-                {
-                    b.HasOne("LogizerServer.Models.Level", "Level")
-                        .WithMany("Likes")
-                        .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LogizerServer.Models.User", "User")
-                        .WithMany("LevelLikes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Level");
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("LogizerServer.Models.LevelRating", b =>
-                {
-                    b.HasOne("LogizerServer.Models.Level", "Level")
-                        .WithMany("Ratings")
-                        .HasForeignKey("LevelId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("LogizerServer.Models.User", "User")
-                        .WithMany("LevelRatings")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Level");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("LogizerServer.Models.UserFavorite", b =>
                 {
                     b.HasOne("LogizerServer.Models.Level", "Level")
@@ -223,20 +135,9 @@ namespace LogizerServer.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("LogizerServer.Models.Level", b =>
-                {
-                    b.Navigation("Likes");
-
-                    b.Navigation("Ratings");
-                });
-
             modelBuilder.Entity("LogizerServer.Models.User", b =>
                 {
                     b.Navigation("FavoriteLevels");
-
-                    b.Navigation("LevelLikes");
-
-                    b.Navigation("LevelRatings");
                 });
 #pragma warning restore 612, 618
         }
