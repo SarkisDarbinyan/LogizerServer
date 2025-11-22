@@ -17,27 +17,51 @@ namespace LogizerServer.Controllers
             _context = context;
         }
 
-        [HttpGet("{id}")]
-        public async Task<ActionResult<GetLevelDto>> GetLevel(int id)
+        [HttpGet("{name}")]
+        public async Task<ActionResult<List<GetLevelDto>>> GetLevel(string name)
         {
-            var level = await _context.Levels.FindAsync(id);
+            if (string.IsNullOrWhiteSpace(name))
+                return BadRequest("Name parameter is required");
 
-            if (level == null)
+            var levels = await _context.Levels
+                .Where(l => l.Name.ToLower().Contains(name.ToLower()))
+                .Select(l => new GetLevelDto
+                {
+                    Name = l.Name,
+                    Description = l.Description,
+                    LevelData = l.LevelData,
+                    Difficulty = l.Difficulty,
+                    LikeCount = l.LikeCount,
+                    PlayCount = l.PlayCount
+                })
+                .ToListAsync();
+
+            if (levels == null)
                 return NotFound();
 
-            return Ok(level);
+            return Ok(levels);
         }
 
 
         [HttpGet]
         public async Task<ActionResult<GetLevelDto>> GetLevelList()
         {
-            var levels = await _context.Levels.ToListAsync();
+            var levelDtos = await _context.Levels
+                .Select(level => new GetLevelDto
+                {
+                    Name = level.Name,
+                    Description = level.Description,
+                    LevelData = level.LevelData,
+                    Difficulty = level.Difficulty,
+                    LikeCount = level.LikeCount,
+                    PlayCount = level.PlayCount
+                })
+                .ToListAsync();
 
-            if (levels.Count == 0)
+            if (levelDtos.Count == 0)
                 return NotFound();
 
-            return Ok(levels);
+            return Ok(levelDtos);
         }
 
 
