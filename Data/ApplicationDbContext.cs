@@ -1,7 +1,9 @@
 ﻿// ApplicationDbContext.cs
 using LogizerServer.Models;
 using Microsoft.EntityFrameworkCore;
-namespace LogizerServer.Data { 
+
+namespace LogizerServer.Data
+{
     public class ApplicationDbContext : DbContext
     {
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options) : base(options)
@@ -31,10 +33,8 @@ namespace LogizerServer.Data {
             {
                 entity.HasKey(e => e.Id);
                 entity.Property(e => e.Username).IsRequired().HasMaxLength(50);
-                entity.Property(e => e.Email).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.PasswordHash).IsRequired();
                 entity.HasIndex(e => e.Username).IsUnique();
-                entity.HasIndex(e => e.Email).IsUnique();
             });
 
             // UserFavorite configuration
@@ -88,6 +88,5 @@ namespace LogizerServer.Data {
                       .OnDelete(DeleteBehavior.Cascade);
             });
         }
-
     }
 }

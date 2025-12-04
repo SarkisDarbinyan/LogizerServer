@@ -3,8 +3,7 @@ namespace LogizerServer.Models.DTOs
 {
     public class AddFavoriteDto
     {
-        public int UserId { get; set; }
-        public int LevelId { get; set; }
+        public int LevelId { get; set; } // Убрали UserId, так как он берется из токена
     }
 
     public class FavoriteLevelDto
