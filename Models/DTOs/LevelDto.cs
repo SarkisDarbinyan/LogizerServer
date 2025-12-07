@@ -10,6 +10,7 @@
 
     public class GetLevelDto
     {
+        public int LevelId { get; set; }
         public string Name { get; set; } = string.Empty;
         public string Description { get; set; } = string.Empty;
         public string LevelData { get; set; } = string.Empty;

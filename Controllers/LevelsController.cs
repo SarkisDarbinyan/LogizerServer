@@ -27,6 +27,7 @@ namespace LogizerServer.Controllers
                 .Where(l => l.Name.ToLower().Contains(name.ToLower()))
                 .Select(l => new GetLevelDto
                 {
+                    LevelId = l.Id,
                     Name = l.Name,
                     Description = l.Description,
                     LevelData = l.LevelData,
@@ -49,6 +50,7 @@ namespace LogizerServer.Controllers
             var levelDtos = await _context.Levels
                 .Select(level => new GetLevelDto
                 {
+                    LevelId = level.Id,
                     Name = level.Name,
                     Description = level.Description,
                     LevelData = level.LevelData,
