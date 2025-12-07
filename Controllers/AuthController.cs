@@ -70,13 +70,7 @@ namespace LogizerServer.Controllers
             var response = new AuthResponseDto
             {
                 Token = token,
-                Expires = DateTime.UtcNow.AddMinutes(60),
-                User = new UserDto
-                {
-                    Id = user.Id,
-                    Username = user.Username,
-                    CreatedAt = user.CreatedAt
-                }
+                Username = user.Username
             };
 
             return Ok(response);
@@ -110,13 +104,7 @@ namespace LogizerServer.Controllers
             var response = new AuthResponseDto
             {
                 Token = token,
-                Expires = DateTime.UtcNow.AddMinutes(60),
-                User = new UserDto
-                {
-                    Id = user.Id,
-                    Username = user.Username,
-                    CreatedAt = user.CreatedAt
-                }
+                Username = user.Username
             };
 
             return Ok(response);
