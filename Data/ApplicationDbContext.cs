@@ -25,7 +25,18 @@ namespace LogizerServer.Data
                 entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
                 entity.Property(e => e.Description).HasMaxLength(500);
                 entity.Property(e => e.LevelData).IsRequired();
-                entity.HasIndex(e => e.Name).IsUnique();
+
+                // Убрали уникальный индекс для Name, так как теперь проверяем Name + CreatorId
+                // entity.HasIndex(e => e.Name).IsUnique();
+
+                // Составной уникальный индекс: имя уровня должно быть уникальным для каждого создателя
+                entity.HasIndex(e => new { e.Name, e.CreatorId }).IsUnique();
+
+                // Связь с пользователем (создатель уровня)
+                entity.HasOne(l => l.Creator)
+                      .WithMany() // У пользователя может быть много созданных уровней
+                      .HasForeignKey(l => l.CreatorId)
+                      .OnDelete(DeleteBehavior.Restrict); // Не удалять уровни при удалении пользователя
             });
 
             // User configuration

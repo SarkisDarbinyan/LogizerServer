@@ -8,11 +8,13 @@ namespace LogizerServer.Models
         public string Description { get; set; } = string.Empty;
         public string LevelData { get; set; } = string.Empty;
 
+        public int CreatorId { get; set; } // Добавлено: ID пользователя-создателя
         public Difficulties Difficulty { get; set; } = Difficulties.Unknown;
         public int LikeCount { get; set; } = 0;
         public int PlayCount { get; set; } = 0;
 
         // Навигационные свойства
+        public User? Creator { get; set; } // Добавлено: навигационное свойство
         public ICollection<LevelRating> Ratings { get; set; } = new List<LevelRating>();
         public ICollection<LevelLike> Likes { get; set; } = new List<LevelLike>();
     }

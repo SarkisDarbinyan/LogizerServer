@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using LogizerServer.Data;
 using LogizerServer.Models;
 using LogizerServer.Models.DTOs;
+using Microsoft.AspNetCore.Authorization;
 
 namespace LogizerServer.Controllers
 {
@@ -68,27 +69,58 @@ namespace LogizerServer.Controllers
 
 
         [HttpPost]
+        [Authorize] 
         public async Task<ActionResult<CreateLevelDto>> CreateLevel(CreateLevelDto createLevelDto)
         {
-            var existingLevel = await _context.Levels
-                .FirstOrDefaultAsync(l => l.Name == createLevelDto.Name);
+            int currentUserId = createLevelDto.UserId;
 
-            if (existingLevel != null)
+            var existingLevelWithDifferentUser = await _context.Levels
+                .FirstOrDefaultAsync(l => l.Name == createLevelDto.Name && l.CreatorId != currentUserId);
+
+            if (existingLevelWithDifferentUser != null)
             {
-                return BadRequest(new { error = "Уровень с таким названием уже существует" });
+                return BadRequest(new { error = "Уровень с таким названием уже существует у другого пользователя" });
             }
 
-            var level = new Level
-            {
-                Name = createLevelDto.Name,
-                Description = createLevelDto.Description,
-                LevelData = createLevelDto.LevelData,
-            };
+            var existingLevelSameUser = await _context.Levels
+                .FirstOrDefaultAsync(l => l.Name == createLevelDto.Name && l.CreatorId == currentUserId);
 
-            _context.Levels.Add(level);
-            await _context.SaveChangesAsync();
-            
-            return Ok(level);
+            if (existingLevelSameUser != null)
+            {
+                existingLevelSameUser.Description = createLevelDto.Description;
+                existingLevelSameUser.LevelData = createLevelDto.LevelData;
+
+                _context.Levels.Update(existingLevelSameUser);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Уровень успешно обновлен",
+                    level = existingLevelSameUser,
+                    isUpdated = true
+                });
+            }
+            else
+            {
+                // Создаем новый уровень
+                var level = new Level
+                {
+                    Name = createLevelDto.Name,
+                    Description = createLevelDto.Description,
+                    LevelData = createLevelDto.LevelData,
+                    CreatorId = currentUserId
+                };
+
+                _context.Levels.Add(level);
+                await _context.SaveChangesAsync();
+
+                return Ok(new
+                {
+                    message = "Уровень успешно создан",
+                    level = level,
+                    isUpdated = false
+                });
+            }
         }
     }
 }
